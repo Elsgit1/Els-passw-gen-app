@@ -1,0 +1,17 @@
+[[redirects]]
+	from="https://jb-pwgen.netlify.com/*"
+	to="https://pwgen.joelb.dev/:splat"
+	status=301
+	force = true
+
+[[redirects]]
+	from="/*"
+	to="index.html"
+	status=200
+
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+  ## more info on configuring this file: https://docs.netlify.com/configure-builds/file-based-configuration/
