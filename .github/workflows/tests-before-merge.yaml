@@ -23,11 +23,11 @@ jobs:
   ###        Connected to my personal Sonar Cloud account      ###
   ################################################################
   
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   
       - name: Setup Git
         run: |
@@ -45,7 +45,6 @@ jobs:
         uses: snyk/actions/docker@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-        #  image: ${{ env.IMAGE_NAME }}
+        with:        
            args: --severity-threshold=high --policy-path=.snyk
         continue-on-error: true
