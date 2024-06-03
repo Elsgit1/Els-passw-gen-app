@@ -8,7 +8,8 @@ WORKDIR /app/build
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --only=production --ignore-scripts
+RUN apk add --no-cache nodejs npm && \
+    npm install --only=production --ignore-scripts
 
 # Copy the rest of the application source code
 COPY . .
