@@ -1,7 +1,7 @@
-# Stage 1: Build the application
-FROM node:18-alpine AS builder
+# Use an official node image as the base image
+FROM node:18-alpine
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
@@ -10,23 +10,24 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy application source code
+# Force fix vulnerabilities
+RUN npm audit fix --force
+
+# Copy the rest of the application source code
 COPY . .
 
-# Build step (if your app requires a build process) # Adjust build command if needed
-RUN npm run build  
+# Build the application
+RUN npm run build
 
-# Stage 2: Serve the application with Nginx
+# Use an official Nginx image to serve the application
 FROM nginx:alpine
 
-# Set the working directory to Nginx's serve directory
-WORKDIR /usr/share/nginx/html
-
-# Copy only production files from the builder stage
-COPY --from=builder /app/build .
+# Copy the build output to Nginx's default public directory
+COPY --from=0 /app/build /usr/share/nginx/html
 
 # Expose port 80 for HTTP traffic
 EXPOSE 80
 
 # Containers run nginx with global directives and daemon off
 CMD ["nginx", "-g", "daemon off;"]
+
