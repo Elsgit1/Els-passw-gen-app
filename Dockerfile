@@ -1,30 +1,18 @@
-# Stage 1: Build environment
-FROM node:18-alpine AS builder
-
-# Set the working directory
-WORKDIR /app/build
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
-RUN apk add --no-cache nodejs npm && \
-    npm install --only=production --ignore-scripts
-
-# Copy the rest of the application source code
-COPY . .
-
-# Build the application
-RUN npm run build
-
-# Stage 2: Runtime environment
+# Use an official Nginx image as the base image
 FROM nginx:alpine
 
 # Set the working directory
 WORKDIR /usr/share/nginx/html
 
-# Copy the built application from the builder stage
-COPY --from=builder /app/build .
+# Copy package.json and lock file (if exists)
+COPY package*.json ./
+
+# Install only production dependencies
+RUN apk add --no-cache nodejs npm && \
+    npm install --only=production --ignore-scripts
+
+# Copy the application source code to Nginx's default public directory
+COPY . .
 
 # Expose port 80 for HTTP traffic
 EXPOSE 80
